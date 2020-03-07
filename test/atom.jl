@@ -12,7 +12,7 @@ println("Testing Atom")
     @test carbon == StaticAtom("C")
 end
 
-@testset "Atom" begin
+@testset "OxygenAtom" begin
     carbon = OxygenAtom(6, "C", 12.011, 2.55, 2, 0, 4)
     @test typeof(carbon.number) == Int
     @test typeof(carbon.symbol) == String
@@ -23,4 +23,9 @@ end
     @test typeof(carbon.degree) == Int
     @test Oxygen.atom_equal(carbon, OxygenAtom(6))
     @test Oxygen.atom_equal(carbon, OxygenAtom("C"))
+end
+
+@testset "Printing" begin
+    carbon = OxygenAtom(6, "C", 12.011, 2.55, 2, 0, 4)
+    @test repr(carbon) == "\"C\" atom (number 6)"
 end

@@ -56,5 +56,5 @@ end
 
 Base.show(io::IO, a::Atomic) = print(io, "\"", a.symbol, "\" atom (number ", a.number, ")")
 
-Base.show(io::IO, ::MIME"text/plain", a::Atomic) =
-           print(io, "$(typeof(a)):\n   ", a)
+# Base.show(io::IO, ::MIME"text/plain", a::Atomic) =
+#            print(io, "$(typeof(a)):\n   ", a)
