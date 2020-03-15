@@ -1,7 +1,3 @@
-#=
-TODO: expand test coverage
-=#
-
 using Oxygen
 
 println("Testing Periodic Table")
