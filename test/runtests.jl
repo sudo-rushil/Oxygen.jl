@@ -4,4 +4,5 @@ using Oxygen, Test
     include("periodic.jl")
     include("electrons.jl")
     include("atom.jl")
+    include("molecules.jl")
 end

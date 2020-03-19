@@ -14,7 +14,7 @@ struct StaticAtom <: Atomic
     symbol::String
     mass::Float64
     orbitals::Electrons
-    electronegativity::Union{Float64, Missing}
+    electronegativity::Union{Float64,Missing}
 end
 
 mutable struct OxygenAtom <: Atomic
@@ -30,55 +30,24 @@ end
 
 StaticAtom(symbol::String) = begin
     number = periodic_table[symbol]
-    StaticAtom(
-        number,
-        symbol,
-        periodic_table_mass[number],
-        Electrons(number),
-        periodic_table_electronegativity[number]
-    )
+    StaticAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])
 end
 
 StaticAtom(number::Int) = begin
     symbol = periodic_table_reverse[number]
-    StaticAtom(
-        number,
-        symbol,
-        periodic_table_mass[number],
-        Electrons(number),
-        periodic_table_electronegativity[number]
-    )
+    StaticAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])
 end
 
-OxygenAtom(number, symbol, mass, orbitals, electronegativity) = OxygenAtom(
-    number,
-    symbol,
-    mass,
-    orbitals,
-    electronegativity,
-    0, 0, 0
-)
+OxygenAtom(number, symbol, mass, orbitals, electronegativity) = OxygenAtom(number, symbol, mass, orbitals, electronegativity, 0, 0, 0)
 
 OxygenAtom(symbol::String) = begin
     number = periodic_table[symbol]
-    OxygenAtom(
-        number,
-        symbol,
-        periodic_table_mass[number],
-        Electrons(number),
-        periodic_table_electronegativity[number]
-    )
+    OxygenAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])
 end
 
 OxygenAtom(number::Int) = begin
     symbol = periodic_table_reverse[number]
-    OxygenAtom(
-        number,
-        symbol,
-        periodic_table_mass[number],
-        Electrons(number),
-        periodic_table_electronegativity[number]
-    )
+    OxygenAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])
 end
 
 function atom_equal(a::Atomic, b::Atomic)::Bool
