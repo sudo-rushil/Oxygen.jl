@@ -8,8 +8,8 @@ println("Testing Molecules")
     @test typeof(water.adj) <: Array
     morewater = OxygenMol([1, 8, 1])
     morewater.adj = [[(2, 1)], [(1, 1), (3, 1)], [(3, 1)]]
-    @test Oxygen.mol_equal(water, morewater)
+    @test water == morewater
     alsowater = OxygenMol(["H", "O", "H"])
     alsowater.adj = [[(2, 1)], [(1, 1), (3, 1)], [(3, 1)]]
-    @test Oxygen.mol_equal(water, alsowater)
+    @test water == alsowater
 end

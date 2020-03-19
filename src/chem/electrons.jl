@@ -5,8 +5,6 @@ TODO: See if tuple implementation of orbitals needs to be improved on.
 
 =#
 
-import Base
-
 struct Electrons
     root::Union{String, Nothing}
     orbitals::Tuple
@@ -24,8 +22,6 @@ function parse_config(config::String)::Electrons
         )
     )
 end
-
-parse_config("[Ne]3s2 3p4")
 
 Electrons(number::Int) = begin
     config = periodic_table_electrons[number]

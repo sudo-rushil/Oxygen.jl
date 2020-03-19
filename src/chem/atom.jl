@@ -5,8 +5,6 @@ StaticAtom implements properties that do not change depending on atomic context,
 
 =#
 
-import Base
-
 abstract type Atomic end
 
 struct StaticAtom <: Atomic
@@ -50,9 +48,8 @@ OxygenAtom(number::Int) = begin
     OxygenAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])
 end
 
-function atom_equal(a::Atomic, b::Atomic)::Bool
-    a.number == b.number && a.symbol == b.symbol && a.mass == b.mass
-end
+
+Base.:(==)(a::Atomic, b::Atomic) = isequal(a.number, b.number) && isequal(a.symbol, b.symbol) && isequal(a.mass, b.mass) && isequal(a.orbitals, b.orbitals)
 
 Base.show(io::IO, a::Atomic) = print(io, "\"", a.symbol, "\" atom (number ", a.number, ")")
 

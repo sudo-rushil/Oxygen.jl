@@ -23,8 +23,8 @@ end
     @test typeof(carbon.formalcharge) == Int
     @test typeof(carbon.radicals) == Int
     @test typeof(carbon.degree) == Int
-    @test Oxygen.atom_equal(carbon, OxygenAtom(6))
-    @test Oxygen.atom_equal(carbon, OxygenAtom("C"))
+    @test carbon == OxygenAtom(6)
+    @test carbon == OxygenAtom("C")
 end
 
 @testset "Printing" begin
