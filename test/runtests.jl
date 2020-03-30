@@ -5,4 +5,5 @@ using Oxygen, Test
     include("electrons.jl")
     include("atom.jl")
     include("molecules.jl")
+    include("smiles.jl")
 end

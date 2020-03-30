@@ -14,9 +14,9 @@ abstract type Molecular end
 
 @auto_hash_equals mutable struct OxygenMol <: Molecular
     atoms::Array{OxygenAtom,1}
-    adj::Array{Array{Tuple{Int,Int},1},1}
+    adj::Array{Array{Tuple{Int,Float64},1},1}
 end
 
-OxygenMol(atoms::Array{Int,1}) = OxygenMol(map(number -> OxygenAtom(number), atoms), [])
+OxygenMol(atoms::Array{Int,1}) = OxygenMol(map(number -> OxygenAtom(number), atoms), [[] for _ in 1:length(atoms)])
 
-OxygenMol(atoms::Array{String,1}) = OxygenMol(map(symbol -> OxygenAtom(symbol), atoms), [])
+OxygenMol(atoms::Array{String,1}) = OxygenMol(map(symbol -> OxygenAtom(symbol), atoms), [[] for _ in 1:length(atoms)])
