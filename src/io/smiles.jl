@@ -4,6 +4,7 @@ Functions to convert smiles strings into OxygenMol objects.
 SMILES parser is expected to change and evolve over time
 
 Grammar specification based on https://biocyc.org/help.html?object=smiles
+
 =#
 
 function split_atoms(smiles::String)::OxygenMol
@@ -139,7 +140,10 @@ function addcycles!(mol::OxygenMol, bonds::Array{String,1}, smiles::String)
     mol
 end
 
-function smilestomol(smiles::String)::OxygenMol
+function smilestomol(rawsmiles::String)::OxygenMol
+    # Temporary workaround for atom-labelling or explicit hydrogens.
+    smiles = replace(rawsmiles, r"\[(b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I).+?\]" => s"\1")
+
     mol = split_atoms(smiles)
     branches = split_smiles(smiles)
     bonds = split_bonds(smiles)
@@ -147,6 +151,7 @@ function smilestomol(smiles::String)::OxygenMol
 
     traverse!(mol, bonds, root)
     addcycles!(mol, bonds, smiles)
+    process!(mol)
 
     mol
 end
