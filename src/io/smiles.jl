@@ -7,25 +7,25 @@ Grammar specification based on https://biocyc.org/help.html?object=smiles
 
 =#
 
-function split_atoms(smiles::String)::OxygenMol
+function _split_atoms(smiles::String)::OxygenMol
     atom_match = r"b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I"
     OxygenMol(map(x -> uppercasefirst(String(x.match)), collect(eachmatch(atom_match, smiles))))
 end
 
-mutable struct ParseNode
+mutable struct _ParseNode
     first::Int
     last::Int
-    children::Array{ParseNode,1}
+    children::Array{_ParseNode,1}
 end
 
-ParseNode(f::Int, l::Int) = ParseNode(f, l, [])
+_ParseNode(f::Int, l::Int) = _ParseNode(f, l, [])
 
-function addchild!(node::ParseNode, child::ParseNode)
+function _addchild!(node::_ParseNode, child::_ParseNode)
     push!(node.children, child)
     node
 end
 
-function split_smiles(smiles::String)::Array{Any,1}
+function _split_smiles(smiles::String)::Array{Any,1}
     splitsmiles = map(x -> String(x.match), collect(eachmatch(r"b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I|\(|\)", smiles)))
     counter, current = 1, 1
     out = []
@@ -33,7 +33,7 @@ function split_smiles(smiles::String)::Array{Any,1}
     for char in splitsmiles
         if (char == "(" || char == ")")
             if current != counter
-                push!(out, ParseNode(current, counter - 1))
+                push!(out, _ParseNode(current, counter - 1))
                 current = counter
             end
             push!(out, char)
@@ -42,10 +42,10 @@ function split_smiles(smiles::String)::Array{Any,1}
         end
     end
 
-    push!(out, ParseNode(current, counter - 1))
+    push!(out, _ParseNode(current, counter - 1))
 end
 
-function parse_brackets(raw_branches::Array{Any,1})::ParseNode
+function _parse_brackets(raw_branches::Array{Any,1})::_ParseNode
     last, lastchar = raw_branches[1], raw_branches[1]
     openbrackets = []
     closebrackets = []
@@ -53,9 +53,9 @@ function parse_brackets(raw_branches::Array{Any,1})::ParseNode
     for branch in raw_branches
         if !(branch in ["(", ")"])
             if isempty(closebrackets) && !isempty(openbrackets)
-                addchild!(openbrackets[end], branch)
+                _addchild!(openbrackets[end], branch)
             elseif !isempty(closebrackets)
-                addchild!(closebrackets[end], branch)
+                _addchild!(closebrackets[end], branch)
             end
         end
 
@@ -77,17 +77,17 @@ function parse_brackets(raw_branches::Array{Any,1})::ParseNode
     raw_branches[1]
 end
 
-function addbond!(mol::OxygenMol, first::Int, last::Int, type::Float64 = 1.0)::OxygenMol
+function _addbond!(mol::OxygenMol, first::Int, last::Int, type::Float64 = 1.0)::OxygenMol
     push!(mol.adj[first], (last, type))
     push!(mol.adj[last], (first, type))
     mol
 end
 
-function split_bonds(smiles::String)::Array{String,1}
+function _split_bonds(smiles::String)::Array{String,1}
     map(x -> String(x.match), collect(eachmatch(r"(=|#)?(b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I)", smiles)))
 end
 
-function bondvalue(bond_symbol::String)::Float64
+function _bondvalue(bond_symbol::String)::Float64
     if bond_symbol == "="
         2
     elseif bond_symbol == "#"
@@ -99,28 +99,28 @@ function bondvalue(bond_symbol::String)::Float64
     end
 end
 
-function bond_type(index::Int, bonds::Array{String,1})::Float64
+function _bond_type(index::Int, bonds::Array{String,1})::Float64
     bond = bonds[index][1:1]
-    bondvalue(bond)
+    _bondvalue(bond)
 end
 
-function traverse!(mol::OxygenMol, bonds::Array{String,1}, root::ParseNode)
-    nodetobonds!(mol, bonds, root)
+function _traverse!(mol::OxygenMol, bonds::Array{String,1}, root::_ParseNode)
+    _nodetobonds!(mol, bonds, root)
 
     for node in root.children
-        addbond!(mol, root.last, node.first, bond_type(node.first, bonds))
-        traverse!(mol, bonds, node)
+        _addbond!(mol, root.last, node.first, _bond_type(node.first, bonds))
+        _traverse!(mol, bonds, node)
     end
 end
 
-function nodetobonds!(mol::OxygenMol, bonds::Array{String,1}, node::ParseNode)::OxygenMol
+function _nodetobonds!(mol::OxygenMol, bonds::Array{String,1}, node::_ParseNode)::OxygenMol
     for i = node.first:node.last-1
-        addbond!(mol, i, i + 1, bond_type(i + 1, bonds))
+        _addbond!(mol, i, i + 1, _bond_type(i + 1, bonds))
     end
     mol
 end
 
-function addcycles!(mol::OxygenMol, bonds::Array{String,1}, smiles::String)
+function _addcycles!(mol::OxygenMol, bonds::Array{String,1}, smiles::String)
     ring_atoms = map(x -> String(x.match), collect(eachmatch(r"(C|c|N|n|O|F|S|Cl|Br|P)(=|#)?\d?", smiles)))
     rings = Dict{Char,Int}()
 
@@ -131,8 +131,8 @@ function addcycles!(mol::OxygenMol, bonds::Array{String,1}, smiles::String)
                 rings[index] = i
             else
                 bond_symbol = ring_atoms[1][end-1:end-1]
-                bond = bondvalue(bond_symbol)
-                addbond!(mol, rings[index], i, bond)
+                bond = _bondvalue(bond_symbol)
+                _addbond!(mol, rings[index], i, bond)
             end
         end
     end
@@ -140,17 +140,22 @@ function addcycles!(mol::OxygenMol, bonds::Array{String,1}, smiles::String)
     mol
 end
 
-function smilestomol(rawsmiles::String)::OxygenMol
+"""
+    smilestomol(smiles)
+
+Returns the OxygenMol for the molecule represented by `smiles`.
+"""
+function smilestomol(smiles::String)::OxygenMol
     # Temporary workaround for atom-labelling or explicit hydrogens.
-    smiles = replace(rawsmiles, r"\[(b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I).+?\]" => s"\1")
+    cleansmiles = replace(smiles, r"\[(b|c|n|o|p|s|B|C|N|O|P|S|F|Cl|Br|I).+?\]" => s"\1")
 
-    mol = split_atoms(smiles)
-    branches = split_smiles(smiles)
-    bonds = split_bonds(smiles)
-    root = parse_brackets(branches)
+    mol = _split_atoms(cleansmiles)
+    branches = _split_smiles(cleansmiles)
+    bonds = _split_bonds(cleansmiles)
+    root = _parse_brackets(branches)
 
-    traverse!(mol, bonds, root)
-    addcycles!(mol, bonds, smiles)
+    _traverse!(mol, bonds, root)
+    _addcycles!(mol, bonds, cleansmiles)
     process!(mol)
 
     mol
