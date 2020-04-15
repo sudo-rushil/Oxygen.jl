@@ -156,7 +156,6 @@ function smilestomol(smiles::String)::OxygenMol
 
     _traverse!(mol, bonds, root)
     _addcycles!(mol, bonds, cleansmiles)
-    process!(mol)
 
     mol
 end

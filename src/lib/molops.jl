@@ -3,13 +3,6 @@ Functions to process raw OxygenMols and extract tangential low level information
 
 =#
 
-function process!(mol::OxygenMol)::OxygenMol
-    for (atom, bonds) in zip(mol.atoms, mol.adj)
-        atom.degree = length(bonds)
-    end
-    mol
-end
-
 
 function getbonds(mol::OxygenMol)::Array{Tuple,1}
     bondlist = []
@@ -24,14 +17,14 @@ function getbonds(mol::OxygenMol)::Array{Tuple,1}
 end
 
 
-function getadjmatrix(mol::OxygenMol, ::Type{T})::Array{T,2} where T<:AbstractFloat
-    adj = zeros(T, (length(mol.atoms),length(mol.atoms)))
+function getadjmatrix(::Type{T}, mol::OxygenMol)::Array{T,2} where {T<:AbstractFloat}
+    adj = zeros(T, (length(mol.atoms), length(mol.atoms)))
     for (start, bonds) in enumerate(mol.adj)
         for (last, type) in bonds
-            adj[start,last] = type
+            adj[start, last] = type
         end
     end
     adj
- end
+end
 
- getadjmatrix(mol::OxygenMol) = getadjmatrix(mol::OxygenMol, Float32)
+getadjmatrix(mol::OxygenMol) = getadjmatrix(Float32, mol::OxygenMol)
