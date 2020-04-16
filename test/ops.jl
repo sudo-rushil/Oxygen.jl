@@ -1,6 +1,6 @@
 using Oxygen
 
-println("Testing Mol Operations")
+println("Testing Operations")
 
 @testset "MolOps" begin
    ethyl_acetate = smilestomol("CC(=O)OCC")
@@ -18,6 +18,15 @@ println("Testing Mol Operations")
       0.0 1.0 0.0 0.0 1.0 0.0
       0.0 0.0 0.0 1.0 0.0 1.0
       0.0 0.0 0.0 0.0 1.0 0.0
+   ]
+   @test Oxygen.valencies(ethyl_acetate) == [1, 3, 1, 2, 2, 1]
+   @test Oxygen.atomtypes(ethyl_acetate) == [
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      0.0  0.0  1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      0.0  0.0  1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
    ]
 
    benzene = smilestomol("c1ccccc1")
@@ -37,4 +46,23 @@ println("Testing Mol Operations")
       0.0  0.0  0.0  1.5  0.0  1.5
       1.5  0.0  0.0  0.0  1.5  0.0
    ]
+   @test Oxygen.valencies(benzene) == [2, 2, 2, 2, 2, 2]
+   @test Oxygen.atomtypes(benzene) == [
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+      1.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+   ]
+end
+
+@testset "AtomOps" begin
+   ethyl_acetate = smilestomol("CC(=O)OCC")
+   @test map(Oxygen.valence_electrons, ethyl_acetate.atoms) == [4, 4, 6, 6, 4, 4]
+   @test Oxygen.neighbors(ethyl_acetate, 2) == [OxygenAtom("C"), OxygenAtom("O"), OxygenAtom("O")]
+
+   benzene = smilestomol("c1ccccc1")
+   @test map(Oxygen.valence_electrons, benzene.atoms) == [4, 4, 4, 4, 4, 4]
+   @test Oxygen.neighbors(benzene, 2) == [OxygenAtom("C"), OxygenAtom("C")]
 end
