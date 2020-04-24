@@ -1,6 +1,6 @@
 module Oxygen
 
-export StaticAtom, OxygenAtom, OxygenMol, smilestomol
+export StaticAtom, OxygenAtom, OxygenMol, smilestomol, molfeatures
 
 include("chem/periodic.jl")
 include("chem/electrons.jl")
