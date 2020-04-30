@@ -143,7 +143,13 @@ end
 """
     smilestomol(smiles)
 
-Returns the OxygenMol for the molecule represented by `smiles`.
+Parses molecule represented by `smiles` into an `OxygenMol`.
+
+# Examples
+```
+julia> smilestomol("c1ccccc1")
+OxygenMol(OxygenAtom["C" atom (number 6), "C" atom (number 6), "C" atom (number 6), "C" atom (number 6), "C" atom (number 6), "C" atom (number 6)], [[(2, 1.5), (6, 1.5)], [(1, 1.5), (3, 1.5)], [(2, 1.5), (4, 1.5)], [(3, 1.5), (5, 1.5)], [(4, 1.5), (6, 1.5)], [(5, 1.5), (1, 1.5)]])
+```
 """
 function smilestomol(smiles::String)::OxygenMol
     # Temporary workaround for atom-labelling or explicit hydrogens.

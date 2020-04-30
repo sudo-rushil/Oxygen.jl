@@ -1,4 +1,4 @@
-# OxygenMol Type
+# OxygenMol
 
 Data types for organic molecules.
 

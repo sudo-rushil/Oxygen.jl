@@ -1,4 +1,4 @@
-# OxygenAtom Type
+# OxygenAtom
 
 Mutable types for representing atoms and associated atom features.
 

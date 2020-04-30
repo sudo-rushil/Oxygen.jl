@@ -16,6 +16,22 @@ struct OxygenAtom <: Atomic
     electronegativity::Float64
 end
 
+"""
+    OxygenAtom
+
+Immutable atom type.
+
+# Examples
+```
+julia> OxygenAtom("C")
+"C" atom (number 6)
+
+julia> OxygenAtom(6)
+"C" atom (number 6)
+```
+"""
+OxygenAtom
+
 OxygenAtom(symbol::String) = begin
     number = periodic_table[symbol]
     OxygenAtom(number, symbol, periodic_table_mass[number], Electrons(number), periodic_table_electronegativity[number])

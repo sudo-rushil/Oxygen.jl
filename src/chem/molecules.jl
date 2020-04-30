@@ -17,6 +17,15 @@ abstract type Molecular end
     adj::Array{Array{Tuple{Int,Float64},1},1}
 end
 
+"""
+    OxygenMol
+
+Mutable molecule type.
+
+Represents molecules using an array of atoms and a weighted adjacency list to represent bonds.
+"""
+OxygenMol
+
 OxygenMol(atoms::Array{Int,1}) = OxygenMol(map(number -> OxygenAtom(number), atoms), [[] for _ in 1:length(atoms)])
 
 OxygenMol(atoms::Array{String,1}) = OxygenMol(map(symbol -> OxygenAtom(symbol), atoms), [[] for _ in 1:length(atoms)])
