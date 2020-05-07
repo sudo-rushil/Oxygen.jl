@@ -135,6 +135,7 @@ julia> hybridization(smilestomol("c1ccccc1"))
  0  0  0  0  1  0  0
  0  0  0  0  1  0  0
  0  0  0  0  1  0  0
+```
 """
 function hybridization(mol::OxygenMol)::Array{Int,2}
     #TODO: Retrieve hybridization states instead of bonding electrons.
