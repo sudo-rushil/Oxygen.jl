@@ -35,7 +35,7 @@ function getbonds(mol::OxygenMol)::Array{Tuple,1}
 end
 
 """
-    getadjmatrix(smiles)
+    getadjmatrix(mol)
 
 Generates adjacency matrix of molecule, weighted by bond type
 
@@ -70,7 +70,7 @@ end
 
 
 """
-    atomtypes(smiles)
+    atomtypes(mol)
 
 Creates one-hot mapping of atoms in a molecule to common atoms.
 Current valid atoms array is `["C", "N", "O", "S", "F", "P", "Cl", "Mg", "Na", "Br", "Ca", "Cu", "Pd", "I", "Al"]`.
@@ -96,7 +96,7 @@ end
 atomtypes(mol::OxygenMol) = atomtypes(Float32, mol::OxygenMol)
 
 """
-    valencies(smiles)
+    valencies(mol)
 
 Creates one-hot mapping of atom valencies in a molecule.
 Current maximum valid valencies (number of connected non-hydrogen atoms) is 6.
@@ -120,7 +120,7 @@ function valencies(mol::OxygenMol)::Array{Int,2}
 end
 
 """
-    hybridization(smiles)
+    hybridization(mol)
 
 Creates one-hot mapping of atom hybridization states in a molecule.
 Currently creates onehot mapping of bonding electron count. Hybridization states will be added soon.
@@ -146,7 +146,7 @@ function hybridization(mol::OxygenMol)::Array{Int,2}
 end
 
 """
-    molfeatures(smiles)
+    molfeatures(mol)
 
 Creates atom-wise features matrix for a molecule based on atomtypes, valence, and hybridization.
 Note: `molfeatures` and `getadjmatrix` do **not** return padded arrays.
