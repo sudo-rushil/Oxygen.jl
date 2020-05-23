@@ -9,6 +9,7 @@ include("chem/molecules.jl")
 
 include("lib/atomops.jl")
 include("lib/molops.jl")
+include("lib/graphutils.jl")
 
 include("io/smiles.jl")
 

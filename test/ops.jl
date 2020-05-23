@@ -96,3 +96,11 @@ end
    @test map(Oxygen.valence_electrons, benzene.atoms) == [4, 4, 4, 4, 4, 4]
    @test Oxygen.neighbors(benzene, 2) == [OxygenAtom("C"), OxygenAtom("C")]
 end
+
+@testset "GraphUtils" begin
+   benzene = smilestomol("c1ccccc1")
+   @test Oxygen.dfs(benzene) == [(1, 12), (2, 11), (3, 10), (4, 9), (5, 8), (6, 7)]
+
+   ethyl_acetate = smilestomol("CC(=O)OCC")
+   @test Oxygen.dfs(ethyl_acetate) == [(1, 12), (2, 11), (3, 4), (5, 10), (6, 9), (7, 8)]
+end
